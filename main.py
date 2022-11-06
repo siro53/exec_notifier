@@ -27,15 +27,30 @@ def main() -> None:
     commands = args.commands.split()
     default_output_path = args.default_output_path if args.default_output_path != None else 'ターミナル'
     error_output_path = args.error_output_path if args.error_output_path != None else 'ターミナル'
-    result = subprocess.run(commands)
 
+    if args.default_output_path != None:
+        ofile = open(default_output_path, 'w')
+    else:
+        ofile = None
+
+    if args.error_output_path != None:
+        efile = open(error_output_path, 'w')
+    else:
+        efile = None
+    
     send_msg(f"`{args.commands}` の実行を開始しました.")
+
+    # run commands
+    result = subprocess.run(commands, stdout=ofile, stderr=efile)
+
+    default_output_path = '`' + default_output_path + '`'
+    error_output_path = '`' + error_output_path + '`'
 
     if result.returncode == 0:
         send_msg(f"""
         *プログラムは正常に終了しました.* {emoji.emojize(' '.join([':tada:' for _ in range(3)]), language='alias')}
-        標準出力は {args.default_output_path if hasattr(args, 'default_output_path') else 'ターミナル'} に出力されました.
-        エラー出力は {args.error_output_path if hasattr(args, 'error_output_path') else 'ターミナル'} に出力されました.
+        標準出力は {default_output_path} に出力されました.
+        エラー出力は {error_output_path} に出力されました.
         """)
     else:
         send_msg(f"""
@@ -43,6 +58,12 @@ def main() -> None:
         標準出力は {default_output_path} に出力されました.
         エラー出力は {error_output_path} に出力されました.
         """)
+
+    if args.default_output_path != None:
+        ofile.close()
+
+    if args.error_output_path != None:
+        efile.close()
 
 if __name__ == '__main__':
     main()
