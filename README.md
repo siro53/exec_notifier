@@ -1,6 +1,8 @@
 # exec_notifier
 プログラムの実行の開始/終了をslackに通知するコマンドツール。
 
+<img width=400 src="https://i.imgur.com/ySucvpK.png">
+
 ## 環境構築
 1. `pip3 install -r requirements.txt` で依存パッケージをインストールする。
 
